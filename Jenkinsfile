@@ -17,6 +17,14 @@ pipeline {
         }
     }
 }
+        stage("Quality Gate") {
+    steps {
+        timeout(time: 1, unit: 'HOURS') {
+            // Jenkins will wait here for SonarQube's Pass/Fail result
+            waitForQualityGate abortPipeline: true
+        }
+    }
+}
 
         stage('Build') {
             steps { sh 'mvn clean package -DskipTests' }
