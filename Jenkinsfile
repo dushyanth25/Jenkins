@@ -1,44 +1,29 @@
 pipeline {
     agent any
-
     tools {
-        // Use the exact name of the Maven tool you configured in Global Tool Configuration
         maven 'Maven-3.9.12'
     }
-
     stages {
         stage('Checkout') {
+            steps { checkout scm }
+        }
+        
+        // NEW STAGE FOR EXERCISE 14
+        stage('SonarQube Analysis') {
             steps {
-                // This pulls your code from GitHub
-                checkout scm
+                // 'My Sonar Server' must match the name in Jenkins System Config
+                withSonarQubeEnv('My Sonar Server') {
+                    sh 'mvn sonar:sonar'
+                }
             }
         }
 
         stage('Build') {
-            steps {
-                // Runs Maven build and packages the JAR
-                sh 'mvn clean package -DskipTests'
-            }
+            steps { sh 'mvn clean package -DskipTests' }
         }
-
         stage('Test') {
-            steps {
-                // Runs JUnit tests (Quality Gate)
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    // Record test results regardless of pass/fail
-                    junit 'target/surefire-reports/*.xml'
-                }
-            }
-        }
-        
-        stage('Archive') {
-            steps {
-                // Saves the JAR file as a build artifact
-                archiveArtifacts artifacts: 'target/*.jar', allowEmptyArchive: true
-            }
+            steps { sh 'mvn test' }
+            post { always { junit 'target/surefire-reports/*.xml' } }
         }
     }
 }
