@@ -9,14 +9,14 @@ pipeline {
         }
         
         // NEW STAGE FOR EXERCISE 14
-        stage('SonarQube Analysis') {
-            steps {
-                // 'My Sonar Server' must match the name in Jenkins System Config
-                withSonarQubeEnv('My Sonar Server') {
-                    sh 'mvn sonar:sonar'
-                }
-            }
+       stage('SonarQube Analysis') {
+    steps {
+        // This must match the Name 'My Sonar Server' from your screenshot
+        withSonarQubeEnv('My Sonar Server') {
+            sh 'mvn sonar:sonar'
         }
+    }
+}
 
         stage('Build') {
             steps { sh 'mvn clean package -DskipTests' }
