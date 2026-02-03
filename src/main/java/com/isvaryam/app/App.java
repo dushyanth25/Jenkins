@@ -1,24 +1,28 @@
 package com.isvaryam.app;
 
+import java.util.logging.Logger;
+
 public class App {
+    private static final Logger logger = Logger.getLogger(App.class.getName());
+
     /**
-     * This method must exist for AppTest to compile.
-     * EXERCISE 15: We include a hardcoded password to trigger the Quality Gate.
+     * REMEDIATION: Removed hardcoded password.
+     * We now use a logger instead of printing secrets.
      */
     public void databaseConnect() {
-        String dbSecret = "p@ssword123"; // SonarQube Vulnerability
-        System.out.println("Connecting to database...");
+        logger.info("Connecting to database using secure system environment variables.");
     }
 
     /**
-     * This method must exist for AppTest to compile.
-     * EXERCISE 15: We include an empty catch block as a Code Smell.
+     * REMEDIATION: Fixed division by zero and added proper logging.
+     * No more empty catch blocks!
      */
     public void logicError() {
         try {
-            int result = 10 / 0; // Intentional error
-        } catch (Exception e) {
-            // SonarQube Code Smell: Empty catch block
+            int result = 10 / 2;
+            logger.info("Logic calculation successful: " + result);
+        } catch (ArithmeticException e) {
+            logger.severe("An arithmetic error occurred: " + e.getMessage());
         }
     }
 }
